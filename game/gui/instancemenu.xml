@@ -3,4 +3,5 @@
 	<Button name="talkButton" text="Talk" />
 	<Button name="kickButton" text="Kick" />
 	<Button name="inspectButton" text="Inspect" />
+	<Button name="kissButton" text="Make Out!" />
 </VBox>

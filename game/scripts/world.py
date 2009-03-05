@@ -51,7 +51,7 @@ class World(EventListenerBase):
 		if instance.getFifeId() == self.hero.agent.getFifeId():
 			return
 
-		dynamicbuttons = ('moveButton', 'talkButton', 'kickButton', 'inspectButton')
+		dynamicbuttons = ('moveButton', 'talkButton', 'kickButton', 'inspectButton', 'kissButton')
 		if not self.instancemenu:
 			self.instancemenu = pychan.loadXML('gui/instancemenu.xml')
 			self.instancemenu.mapEvents({
@@ -59,6 +59,7 @@ class World(EventListenerBase):
 				'talkButton' : self.onTalkButtonPress,
 				'kickButton' : self.onKickButtonPress,
 				'inspectButton' : self.onInspectButtonPress,
+				'kissButton': self.onKissButtonPress,
 			})
 			for btn in dynamicbuttons:
 				self.dynamic_widgets[btn] = self.instancemenu.findChild(name=btn)
@@ -79,6 +80,9 @@ class World(EventListenerBase):
 			if self.instance_to_agent.has_key(instance.getFifeId()):
 				self.instancemenu.addChild(self.dynamic_widgets['talkButton'])
 				self.instancemenu.addChild(self.dynamic_widgets['kickButton'])
+				for btn in dynamicbuttons:
+					if hasattr (self.instance_to_agent[instance.getFifeId()],btn +"_handler"):
+						self.instancemenu.addChild(self.dynamic_widgets[btn])
 		self.instancemenu.position = (clickpoint.x, clickpoint.y)
 		self.instancemenu.show()
 
@@ -251,6 +255,10 @@ class World(EventListenerBase):
 		self.hide_instancemenu()
 		self.hero.kick(self.instancemenu.instance.getLocationRef())
 		self.instancemenu.instance.say('Hey!', 1000)
+		
+	def onKissButtonPress (self):
+		self.hide_instancemenu()
+		self.instance_to_agent[self.instancemenu.instance.getFifeId()].kissButton_handler (self.instancemenu.instance,self.hero)
 
 	def onInspectButtonPress(self):
 		self.hide_instancemenu()

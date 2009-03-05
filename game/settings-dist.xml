@@ -7,7 +7,7 @@
 	<BitsPerPixel> 0 </BitsPerPixel>
 	<InitialVolume> 5.0 </InitialVolume>
 	<SDLRemoveFakeAlpha> 1 </SDLRemoveFakeAlpha>
-	<WindowTitle> FIFE - Rio de hola </WindowTitle>
+	<WindowTitle> PARPG - a post-apocalyptic roleplaying game </WindowTitle>
 	<WindowIcon>gui/icons/boy.png</WindowIcon>
 
 	<MapFile> maps/shrine.xml </MapFile>
