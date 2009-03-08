@@ -46,5 +46,5 @@ class Girl(Agent):
 		self.state = _STATE_RUN
 		self.agent.move('run', location, GIRL_SPEED)
 	
-	def kissButton_handler(self, myself, kisser):
+	def kissButtonHandler(self, myself, kisser):
 		myself.say('Hands off, punk!',1000)

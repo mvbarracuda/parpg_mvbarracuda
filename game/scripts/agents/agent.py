@@ -16,7 +16,13 @@ class Agent(fife.InstanceActionListener):
 
 	def start(self):
 		raise ProgrammingError('No start defined for Agent')
-
+	
+	def kickButtonHandler (self):
+		"""Placeholder function to enable kick menu display for all children"""
+		pass
+	def talkButtonHandler (self):
+		"""Placeholder function to enable talk menu display for all children"""
+		pass
 
 def create_anonymous_agents(model, objectName, layer, agentClass):
 	agents = []

@@ -43,48 +43,56 @@ class World(EventListenerBase):
 		self.filename = ''
 		self.pump_ctr = 0 # for testing purposis
 		self.ctrldown = False
-		self.instancemenu = None
+		self.instancemenu = pychan.loadXML('gui/instancemenu.xml')
+		# we keep a copy of all possible buttons to avoid reloading of XML
+		self.all_btns = [btn for btn in self.instancemenu.children]
 		self.instance_to_agent = {}
-		self.dynamic_widgets = {}
-
+		# dynamic_widgets should no longer be necessary; commenting them out to be safe
+		#self.dynamic_widgets = {}   
+		
 	def show_instancemenu(self, clickpoint, instance):
+		"""Handles the display of the right-click context menu."""
+		# IMPORTANT: We assume that the ALWAYS_PRESENT_BUTTONS are _NEVER_ removed from the instancemenu
+		# IMPORTANT: World and Agent functions that handle different actions 
+		# must be named "buttonNameHandler", e.g. "talkButtonHandler"
+		# TODO: Add a range check; if we are out of range we should queue (get_in_range, perform_action)
+		
+		# no right-click menu for clicking on Hero
 		if instance.getFifeId() == self.hero.agent.getFifeId():
 			return
-
-		dynamicbuttons = ('moveButton', 'talkButton', 'kickButton', 'inspectButton', 'kissButton')
-		if not self.instancemenu:
-			self.instancemenu = pychan.loadXML('gui/instancemenu.xml')
-			self.instancemenu.mapEvents({
-				'moveButton' : self.onMoveButtonPress,
-				'talkButton' : self.onTalkButtonPress,
-				'kickButton' : self.onKickButtonPress,
-				'inspectButton' : self.onInspectButtonPress,
-				'kissButton': self.onKissButtonPress,
-			})
-			for btn in dynamicbuttons:
-				self.dynamic_widgets[btn] = self.instancemenu.findChild(name=btn)
-		for btn in dynamicbuttons:
-			try:
-				self.instancemenu.removeChild(self.dynamic_widgets[btn])
-			except pychan.exceptions.RuntimeError:
-				pass
-
-		self.instancemenu.clickpoint = clickpoint
-		self.instancemenu.instance = instance
-
-		self.instancemenu.addChild(self.dynamic_widgets['inspectButton'])
-		target_distance = self.hero.agent.getLocationRef().getLayerDistanceTo(instance.getLocationRef())
-		if target_distance > 3.0:
-			self.instancemenu.addChild(self.dynamic_widgets['moveButton'])
+		# buttons that will always be available, regardless of the instance type
+		ALWAYS_PRESENT_BTNS = ('moveButton', 'inspectButton')
+		NAME_PATTERN = "%sHandler"
+		
+		if self.instance_to_agent.has_key(instance.getFifeId()):
+			# we got an agent here; remove any actions that the agent cannot handle
+			for btn in self.all_btns:
+				#do we have this button in the current menu?
+				btn_present = bool(self.instancemenu.findChild(name=btn.name))
+				# do we need this button in the current menu?
+				btn_needed = hasattr(self.instance_to_agent[instance.getFifeId()],NAME_PATTERN % btn.name) \
+					   or btn.name in ALWAYS_PRESENT_BTNS
+				if btn_needed and not btn_present:
+					self.instancemenu.addChild(btn)
+				if not btn_needed and btn_present:
+					self.instancemenu.removeChild(btn)
 		else:
-			if self.instance_to_agent.has_key(instance.getFifeId()):
-				self.instancemenu.addChild(self.dynamic_widgets['talkButton'])
-				self.instancemenu.addChild(self.dynamic_widgets['kickButton'])
-				for btn in dynamicbuttons:
-					if hasattr (self.instance_to_agent[instance.getFifeId()],btn +"_handler"):
-						self.instancemenu.addChild(self.dynamic_widgets[btn])
+			# we got some other kind of object, so only leave always_present actions
+			for btn in self.instancemenu.children[:]:
+				if not btn.name in ALWAYS_PRESENT_BTNS:
+					self.instancemenu.removeChild(btn)
+
+		# map a dictionary of button names to their corresponding World fuctions
+		mapdict = dict([ (btn.name,getattr (self, NAME_PATTERN % btn.name)) for btn in self.instancemenu.children])
+		self.instancemenu.mapEvents (mapdict)
+		
+		# add some global data
+		self.instancemenu.clickpoint = clickpoint
+		self.instancemenu.instance = instance		
 		self.instancemenu.position = (clickpoint.x, clickpoint.y)
+		# show the menu
 		self.instancemenu.show()
+		return 
 
 	def hide_instancemenu(self):
 		if self.instancemenu:
@@ -211,6 +219,7 @@ class World(EventListenerBase):
 			self.hero.run(l)
 
 		if (evt.getButton() == fife.MouseEvent.RIGHT):
+			self.hide_instancemenu()
 			instances = self.cameras['main'].getMatchingInstances(clickpoint, self.agentlayer)
 			print "selected instances on agent layer: ", [i.getObject().getId() for i in instances]
 			if instances:
@@ -234,11 +243,11 @@ class World(EventListenerBase):
 			pass
 		return result
 
-	def onMoveButtonPress(self):
+	def moveButtonHandler(self):
 		self.hide_instancemenu()
 		self.hero.run(self.instancemenu.instance.getLocationRef())
 
-	def onTalkButtonPress(self):
+	def talkButtonHandler(self):
 		self.hide_instancemenu()
 		instance = self.instancemenu.instance
 		self.hero.talk(instance.getLocationRef())
@@ -251,16 +260,16 @@ class World(EventListenerBase):
 			txtindex = random.randint(0, len(girlTexts) - 1)
 			instance.say(girlTexts[txtindex], 5000)
 
-	def onKickButtonPress(self):
+	def kickButtonHandler(self):
 		self.hide_instancemenu()
 		self.hero.kick(self.instancemenu.instance.getLocationRef())
 		self.instancemenu.instance.say('Hey!', 1000)
 		
-	def onKissButtonPress (self):
+	def kissButtonHandler(self):
 		self.hide_instancemenu()
-		self.instance_to_agent[self.instancemenu.instance.getFifeId()].kissButton_handler (self.instancemenu.instance,self.hero)
+		self.instance_to_agent[self.instancemenu.instance.getFifeId()].kissButtonHandler (self.instancemenu.instance,self.hero)
 
-	def onInspectButtonPress(self):
+	def inspectButtonHandler(self):
 		self.hide_instancemenu()
 		inst = self.instancemenu.instance
 		saytext = ['Engine told me that this instance has']
