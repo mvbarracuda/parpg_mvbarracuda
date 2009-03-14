@@ -52,20 +52,28 @@ class World(EventListenerBase):
 		
 	def show_instancemenu(self, clickpoint, instance):
 		"""Handles the display of the right-click context menu."""
-		# IMPORTANT: We assume that the ALWAYS_PRESENT_BUTTONS are _NEVER_ removed from the instancemenu
-		# IMPORTANT: World and Agent functions that handle different actions 
-		# must be named "buttonNameHandler", e.g. "talkButtonHandler"
-		# TODO: Add a range check; if we are out of range we should queue (get_in_range, perform_action)
+		# IMPORTANT: We assume that the ALWAYS_PRESENT_BUTTONS are 
+		# _NEVER_ removed from the instancemenu
+		# IMPORTANT: World and Agent functions that handle different 
+		# actions must be named "buttonNameHandler", e.g. 
+		# "talkButtonHandler"
 		
 		# no right-click menu for clicking on Hero
 		if instance.getFifeId() == self.hero.agent.getFifeId():
 			return
-		# buttons that will always be available, regardless of the instance type
-		ALWAYS_PRESENT_BTNS = ('moveButton', 'inspectButton')
+		# Buttons that will always be available, regardless of the 
+		# instance type.
+		# IMPORTANT: kickButton is listed here only to allow easier 
+		# testing of the range check/queueing code 
+		ALWAYS_PRESENT_BTNS = ('moveButton', 
+				       'inspectButton', 
+				       'kickButton'
+				       )
+		# Pattern matching the name of the handler functions
 		NAME_PATTERN = "%sHandler"
 		
 		if self.instance_to_agent.has_key(instance.getFifeId()):
-			# we got an agent here; remove any actions that the agent cannot handle
+			# we got an agent here; remove any unhandled actions
 			for btn in self.all_btns:
 				#do we have this button in the current menu?
 				btn_present = bool(self.instancemenu.findChild(name=btn.name))
@@ -74,16 +82,17 @@ class World(EventListenerBase):
 					   or btn.name in ALWAYS_PRESENT_BTNS
 				if btn_needed and not btn_present:
 					self.instancemenu.addChild(btn)
-				if not btn_needed and btn_present:
+				elif not btn_needed and btn_present:
 					self.instancemenu.removeChild(btn)
 		else:
-			# we got some other kind of object, so only leave always_present actions
+			# inst is not Agent; only leave always_present actions
 			for btn in self.instancemenu.children[:]:
 				if not btn.name in ALWAYS_PRESENT_BTNS:
 					self.instancemenu.removeChild(btn)
 
-		# map a dictionary of button names to their corresponding World fuctions
-		mapdict = dict([ (btn.name,getattr (self, NAME_PATTERN % btn.name)) for btn in self.instancemenu.children])
+		# map a dictionary of button names to the their World fuctions
+		mapdict = dict([ (btn.name,getattr(self, NAME_PATTERN % btn.name))
+				 for btn in self.instancemenu.children])
 		self.instancemenu.mapEvents (mapdict)
 		
 		# add some global data
@@ -206,6 +215,8 @@ class World(EventListenerBase):
 			self.cameras['main'].setRotation((currot + 5) % 360)
 
 	def mousePressed(self, evt):
+		# quick and dirty way to clear queued actions
+		self.hero.action_stack.clear()
 		if evt.isConsumedByWidgets():
 			return
 
@@ -262,6 +273,18 @@ class World(EventListenerBase):
 
 	def kickButtonHandler(self):
 		self.hide_instancemenu()
+		inst = self.instancemenu.instance
+		#proof-of-concept range checking + action queueing
+		if self.hero.distance_to (inst) > 3:
+			self.hero.action_stack.add_action (self.hero.agent.follow, 
+							  ('run',inst,4 * float(TDS.readSetting("TestAgentSpeed"))), 
+							 lambda x: self.hero.distance_to(x) <= 3,
+							 (inst,)
+							 )
+			self.hero.action_stack.add_action (self.kickButtonHandler)
+			self.hero.action_stack.run()
+			return
+		
 		self.hero.kick(self.instancemenu.instance.getLocationRef())
 		self.instancemenu.instance.say('Hey!', 1000)
 		

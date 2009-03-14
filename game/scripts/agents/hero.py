@@ -13,6 +13,9 @@ class Hero(Agent):
 		self.idlecounter = 1
 
 	def onInstanceActionFinished(self, instance, action):
+		if self.action_stack and self.action_stack.run():
+			# The stack executed something, ignore state change
+			return
 		self.idle()
 		if action.getId() != 'stand':
 			self.idlecounter = 1
@@ -41,3 +44,6 @@ class Hero(Agent):
 	def talk(self, target):
 		self.state = _STATE_TALK
 		self.agent.act('talk', target)
+	
+	def distance_to (self, target):
+		return self.agent.getLocationRef().getLayerDistanceTo(target.getLocationRef())
