@@ -1,0 +1,48 @@
+newmtl material4
+Ka 0.300000 0.300000 0.300000
+Kd 0.700000 0.700000 0.700000
+Ks 1.000000 1.000000 1.000000
+Ns 292.799988
+Tr 0.000000
+illum 2
+map_Kd C:\Softimage\XSI_6.02\Data\PARPG_Weapons\Pictures\steyr69.psd
+newmtl material5
+Ka 0.287000 0.287000 0.287000
+Kd 0.700000 0.700000 0.700000
+Ks 0.297000 0.297000 0.297000
+Ns 300.000000
+Tr 0.000000
+illum 2
+map_Kd C:\Softimage\XSI_6.02\Data\PARPG_Weapons\Pictures\steyr69.psd
+newmtl material3
+Ka 0.300000 0.300000 0.300000
+Kd 0.700000 0.700000 0.700000
+Ks 1.000000 1.000000 1.000000
+Ns 292.799988
+Tr 0.000000
+illum 2
+map_Kd C:\Softimage\XSI_6.02\Data\PARPG_Weapons\Pictures\steyr69.psd
+newmtl material1
+Ka 0.300000 0.300000 0.300000
+Kd 0.700000 0.700000 0.700000
+Ks 1.000000 1.000000 1.000000
+Ns 292.799988
+Tr 0.000000
+illum 2
+map_Kd C:\Softimage\XSI_6.02\Data\PARPG_Weapons\Pictures\steyr69.psd
+newmtl material
+Ka 0.300000 0.300000 0.300000
+Kd 0.700000 0.700000 0.700000
+Ks 1.000000 1.000000 1.000000
+Ns 292.799988
+Tr 0.000000
+illum 2
+map_Kd C:\Softimage\XSI_6.02\Data\PARPG_Weapons\Pictures\steyr69.png
+newmtl material2
+Ka 0.300000 0.300000 0.300000
+Kd 0.700000 0.700000 0.700000
+Ks 1.000000 1.000000 1.000000
+Ns 292.799988
+Tr 0.000000
+illum 2
+map_Kd C:\Softimage\XSI_6.02\Data\PARPG_Weapons\Pictures\steyr69.psd
