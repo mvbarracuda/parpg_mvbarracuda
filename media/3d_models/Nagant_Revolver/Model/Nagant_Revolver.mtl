@@ -1,0 +1,104 @@
+newmtl material
+Ka 0.300000 0.300000 0.300000
+Kd 0.700000 0.700000 0.700000
+Ks 1.000000 1.000000 1.000000
+Ns 50.000000
+Tr 0.000000
+illum 2
+map_Kd C:\Softimage\XSI_6.02\Data\PARPG_Weapons\Pictures\Nagant_Revolver.png
+newmtl material1
+Ka 0.149000 0.149000 0.149000
+Kd 0.700000 0.700000 0.700000
+Ks 1.000000 1.000000 1.000000
+Ns 14.400000
+Tr 0.000000
+illum 2
+map_Kd C:\Softimage\XSI_6.02\Data\PARPG_Weapons\Pictures\Nagant_Revolver_Bump.png
+newmtl material2
+Ka 0.139000 0.139000 0.139000
+Kd 0.700000 0.700000 0.700000
+Ks 1.000000 1.000000 1.000000
+Ns 12.000000
+Tr 0.000000
+illum 2
+map_Kd C:\Softimage\XSI_6.02\Data\PARPG_Weapons\Pictures\Nagant_Revolver.png
+newmtl material3
+Ka 0.300000 0.300000 0.300000
+Kd 0.700000 0.700000 0.700000
+Ks 1.000000 1.000000 1.000000
+Ns 50.000000
+Tr 0.000000
+illum 2
+map_Kd C:\Softimage\XSI_6.02\Data\PARPG_Weapons\Pictures\Nagant_Revolver.png
+newmtl material4
+Ka 0.059000 0.059000 0.059000
+Kd 0.700000 0.700000 0.700000
+Ks 1.000000 1.000000 1.000000
+Ns 21.600000
+Tr 0.000000
+illum 2
+map_Kd C:\Softimage\XSI_6.02\Data\PARPG_Weapons\Pictures\Nagant_Revolver_Bump.png
+newmtl material5
+Ka 0.119000 0.119000 0.119000
+Kd 0.700000 0.700000 0.700000
+Ks 1.000000 1.000000 1.000000
+Ns 12.000000
+Tr 0.000000
+illum 2
+map_Kd C:\Softimage\XSI_6.02\Data\PARPG_Weapons\Pictures\Nagant_Revolver_Bump.png
+newmtl material6
+Ka 0.139000 0.139000 0.139000
+Kd 0.700000 0.700000 0.700000
+Ks 1.000000 1.000000 1.000000
+Ns 12.000000
+Tr 0.000000
+illum 2
+map_Kd C:\Softimage\XSI_6.02\Data\PARPG_Weapons\Pictures\Nagant_Revolver.png
+newmtl material7
+Ka 0.300000 0.300000 0.300000
+Kd 0.700000 0.700000 0.700000
+Ks 1.000000 1.000000 1.000000
+Ns 50.000000
+Tr 0.000000
+illum 2
+map_Kd C:\Softimage\XSI_6.02\Data\PARPG_Weapons\Pictures\Nagant_Revolver.png
+newmtl material8
+Ka 0.300000 0.300000 0.300000
+Kd 0.700000 0.700000 0.700000
+Ks 1.000000 1.000000 1.000000
+Ns 50.000000
+Tr 0.000000
+illum 2
+map_Kd C:\Softimage\XSI_6.02\Data\PARPG_Weapons\Pictures\Nagant_Revolver.png
+newmtl material9
+Ka 0.300000 0.300000 0.300000
+Kd 0.700000 0.700000 0.700000
+Ks 1.000000 1.000000 1.000000
+Ns 50.000000
+Tr 0.000000
+illum 2
+map_Kd C:\Softimage\XSI_6.02\Data\PARPG_Weapons\Pictures\Nagant_Revolver.png
+newmtl material10
+Ka 0.149000 0.149000 0.149000
+Kd 0.700000 0.700000 0.700000
+Ks 1.000000 1.000000 1.000000
+Ns 12.000000
+Tr 0.000000
+illum 2
+map_Kd C:\Softimage\XSI_6.02\Data\PARPG_Weapons\Pictures\Nagant_Revolver.png
+newmtl material11
+Ka 0.208000 0.208000 0.208000
+Kd 0.700000 0.700000 0.700000
+Ks 1.000000 1.000000 1.000000
+Ns 9.600000
+Tr 0.000000
+illum 2
+map_Kd C:\Softimage\XSI_6.02\Data\PARPG_Weapons\Pictures\Nagant_Revolver_Bump.png
+newmtl material12
+Ka 0.168000 0.168000 0.168000
+Kd 0.700000 0.700000 0.700000
+Ks 1.000000 1.000000 1.000000
+Ns 12.000000
+Tr 0.000000
+illum 2
+map_Kd C:\Softimage\XSI_6.02\Data\PARPG_Weapons\Pictures\Nagant_Bullet.png
