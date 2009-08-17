@@ -23,16 +23,19 @@ class Parser():
     """
     The parser
     """
-    def __init__(self, document):
+    def __init__(self, widget, result_function):
         """
         Initialize the parser
-        @type document: QtGui.QDocument
-        @param document: The document generated from a QTextEdit
+        @type document: QtGui.QTextEdit
+        @param document: The QTextEdit
+        @type result_function: function
+        @param result_function: the function that handles the results
         @return: None
         """
-        self.document = document
+        self.widget = widget
+        self.resultFunction = result_function
         self.makeFunctions()
-        self.funcs = ["NPC", "PC", "CALLSECTION", "ENDSECTION", "SECTION", 
+        self.funcs = ["SCRIPTNAME", "NPC", "PC", "CALLSECTION", "ENDSECTION", "SECTION", 
                       "SCRIPTNAME", "ENDOPTION", "OPTION", "PLAYSOUND", 
                       "SAY", "ATTACK", "RETURN", "ELIF", "IF", "ELSE"]
 
@@ -84,7 +87,6 @@ class Parser():
             regex = re.compile(func + "{0,1}")
             if (regex.search(str(string)) != None):
                 type_ = func
-                print type_
                 break
 
         return type_
@@ -94,36 +96,25 @@ class Parser():
         Parse the text
         @return: the parsed text
         """        
-        doc = self.document.toPlainText()
+        doc = self.widget.document().toPlainText()
         if (doc == ""):
             return
 
         for line in doc.split('\n'):
-            line_type = self.findType(line)
+            print line
+            if (line == ""):
+                continue
 
+            line_type = self.findType(line)
             try:
                 command = self.func_by_name[line_type]
-
             except KeyError, e:
                 self.createErrorBox(e)
                 return
 
             parse = command.scanString(line)
             for result in parse:
-                self.handleResult(result[0][0], line_type)
-
-
-    def handleResult(self, result, type_):
-        """
-        Take the result, determine where to put it in the dialog map, then put it there
-        @type result: string
-        @param result: the result to be handled
-        @type type_: string
-        @param type_: the type of result
-        @return: None
-        """
-        print "Result: " + result
-        print "Type: " + type_
+                self.resultFunction(result[0][0], line_type)
 
 
     def createErrorBox(self, error):

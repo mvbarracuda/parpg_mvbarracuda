@@ -18,6 +18,7 @@
 from PyQt4 import QtGui, QtCore
 from scripts.parser import Parser
 
+
 class DialogMap(QtGui.QTreeWidget):
     """
     The dialog map which will show the flow of the dialog
@@ -38,18 +39,53 @@ class DialogMap(QtGui.QTreeWidget):
         self.settings = settings
         self.parent = parent
         self.resize(int(self.settings.res_width), int(self.settings.res_height))
-        self.parser = Parser(main_edit.document())
+        self.parser = Parser(main_edit, self.handleResult)
+        self.itemCount = 0
 
         self.setColumnCount(1)
         self.setEditTriggers(self.NoEditTriggers)
-        self.model = QtGui.QTreeWidgetItem()
-        self.items = []
-        for i in xrange(10):
-            item = QtGui.QTreeWidgetItem()
-            item.setText(0, str(i))
-            item2 = QtGui.QTreeWidgetItem()
-            item2.setText(0, str(i + 1))
-            item.addChild(item2)
-            self.items.append(item)
-        self.insertTopLevelItems(0, self.items)
-        self.setHeaderLabel("Dialog Map")
+        self.setHeaderLabel("")
+        
+    def handleResult(self, result, type_):
+        """
+        Take the result, determine where to put it in the dialog map, then put it there
+        @type result: string
+        @param result: the result to be handled
+        @type type_: string
+        @param type_: the type of result
+        @return: None
+        """
+        text = result.split(' ')
+        if (type_ == "SCRIPTNAME"):
+            self.setHeaderLabel(text[1])
+
+        elif (type_ == "SAY"):
+            sayText = text[0] + " says " + text[2]
+            print "text: " + sayText
+            self.sayItem = QtGui.QTreeWidgetItem()
+            self.sayItem.setText(0, sayText)
+            self.insertItem(self.sayItem)
+
+        elif (type_ == "ATTACK"):
+            attackText = text[0] + " attacks " + text[2]
+            self.attackItem = QtGui.QTreeWidgetItem()
+            self.attackItem.setText(0, attackText)
+            self.insertItem(self.attackItem)
+
+    def insertItem(self, item):
+        """
+        Insert an item at the correct place in the dialog tree
+        @type item: QtGui.QTreeWidgetItem
+        @param item: the item to insert
+        @return: None
+        """
+        self.insertTopLevelItem(0, item)
+
+    def clear(self):
+        """
+        Clear the dialog map
+        """
+        self.setHeaderLabel("")
+        for i in xrange(self.topLevelItemCount()):
+            item = self.itemAt(0, i)
+            self.removeItemWidget(item, 0)
