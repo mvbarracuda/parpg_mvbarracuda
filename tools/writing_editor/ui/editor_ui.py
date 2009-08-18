@@ -36,6 +36,7 @@ class Ui_writingEditor(object):
         self.main_edit = QtGui.QTextEdit(self.editor_tab)
         self.main_edit.setGeometry(QtCore.QRect(0, 0, 791, 381))
         self.main_edit.setObjectName("main_edit")
+        self.main_edit.setTabStopWidth(40)
         self.main_tabs.addTab(self.editor_tab, "")
         self.dialog_map_tab = QtGui.QWidget()
         self.dialog_map_tab.setObjectName("dialog_map_tab")
