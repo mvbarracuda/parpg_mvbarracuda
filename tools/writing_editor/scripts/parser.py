@@ -35,16 +35,17 @@ class Parser():
         self.widget = widget
         self.resultFunction = result_function
         self.makeFunctions()
-        self.funcs = ["SCRIPTNAME", "NPC", "PC", "CALLSECTION", "ENDSECTION", "SECTION", 
+        self.funcs = ["SCRIPTNAME", "NPC", "CALLSECTION", "ENDSECTION", "SECTION", 
                       "SCRIPTNAME", "ENDOPTION", "OPTION", "PLAYSOUND", 
-                      "SAY", "ATTACK", "RETURN", "ELIF", "IF", "ELSE"]
+                      "SAY", "ATTACK", "RETURN", "ELIF", "IF", "ELSE", "PC", "."]
 
         self.func_by_name = {"NPC":self.npc, "PC":self.pc, "CALLSECTION":self.callsection,
                              "ENDSECTION":self.endsection, "SECTION": self.section,
                              "SCRIPTNAME":self.scriptname, "ENDOPTION":self.endoption,
                              "OPTION":self.option, "PLAYSOUND":self.playsound,
                              "SAY":self.say, "ATTACK":self.attack, "RETURN":self.return_,
-                             "ELIF":self.elif_, "IF":self.if_, "ELSE":self.else_}
+                             "ELIF":self.elif_, "IF":self.if_, "ELSE":self.else_,
+                             ".":self.option_item}
 
 
     def makeFunctions(self):
@@ -52,7 +53,9 @@ class Parser():
         Setup all the matching functions
         @return: None
         """
-        self.text = Word(alphas)
+        self.text = Word(alphanums)
+        self.nums = Word(nums)
+        self.period = Literal(".")
         self.space = Literal(" ")
         self.colon = Literal(":")
         self.quote = Literal("\"")
@@ -64,6 +67,7 @@ class Parser():
         self.callsection = Combine(Word("CALLSECTION") + self.space + self.text)
         self.scriptname = Combine(Word("SCRIPTNAME") + self.space + self.text)
         self.option = Combine(Word("OPTION") + self.space + self.text)
+        self.option_item = Combine(self.nums + Optional(self.space) + self.period + Optional(self.space) + self.text)
         self.endoption = Combine(Word("ENDOPTION") + self.space + self.text)
         self.playsound = Combine(Word("PLAYSOUND") + self.space + self.quote + self.text + self.quote)
         self.say = Combine(self.text + self.space + Word("SAY") + self.space + self.quote 
@@ -101,7 +105,6 @@ class Parser():
             return
 
         for line in doc.split('\n'):
-            print line
             if (line == ""):
                 continue
 

@@ -193,7 +193,7 @@ class WritingEditor(QtGui.QMainWindow):
         """
         # it's the main editor
         if (index == 0):
-#            self.dialogMap.clear()
+            self.dialogMap.clear()
             self.ui.actionCopy.setEnabled(True)
             self.ui.actionCut.setEnabled(True)
             self.ui.actionPaste.setEnabled(True)

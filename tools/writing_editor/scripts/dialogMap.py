@@ -40,7 +40,9 @@ class DialogMap(QtGui.QTreeWidget):
         self.parent = parent
         self.resize(int(self.settings.res_width), int(self.settings.res_height))
         self.parser = Parser(main_edit, self.handleResult)
-        self.itemCount = 0
+
+        self.parentItem = None
+        self.inOption = False
 
         self.setColumnCount(1)
         self.setEditTriggers(self.NoEditTriggers)
@@ -56,12 +58,12 @@ class DialogMap(QtGui.QTreeWidget):
         @return: None
         """
         text = result.split(' ')
+
         if (type_ == "SCRIPTNAME"):
             self.setHeaderLabel(text[1])
 
         elif (type_ == "SAY"):
             sayText = text[0] + " says " + text[2]
-            print "text: " + sayText
             self.sayItem = QtGui.QTreeWidgetItem()
             self.sayItem.setText(0, sayText)
             self.insertItem(self.sayItem)
@@ -72,6 +74,24 @@ class DialogMap(QtGui.QTreeWidget):
             self.attackItem.setText(0, attackText)
             self.insertItem(self.attackItem)
 
+        elif (type_ == "OPTION"):
+            optionText = "Option " + text[1]
+            self.optionItem = QtGui.QTreeWidgetItem()
+            self.optionItem.setText(0, optionText)
+            self.insertItem(self.optionItem)
+            self.parentItem = self.optionItem
+            self.inOption = True
+
+        elif (self.inOption and type_ == "."):
+            option_text = result.split('.')
+            itemText = option_text[0] + ': ' + option_text[1]
+            self.optionItem = QtGui.QTreeWidgetItem()
+            self.optionItem.setText(0, itemText)
+            self.parentItem.addChild(self.optionItem)
+
+        elif (type_ == "ENDOPTION"):
+            self.inOption = False
+
     def insertItem(self, item):
         """
         Insert an item at the correct place in the dialog tree
@@ -79,13 +99,14 @@ class DialogMap(QtGui.QTreeWidget):
         @param item: the item to insert
         @return: None
         """
-        self.insertTopLevelItem(0, item)
+        if (self.parentItem == None):
+            self.insertTopLevelItem(self.topLevelItemCount(), item)
+        else:
+            self.parentItem.addChild(item)
 
     def clear(self):
         """
         Clear the dialog map
         """
         self.setHeaderLabel("")
-        for i in xrange(self.topLevelItemCount()):
-            item = self.itemAt(0, i)
-            self.removeItemWidget(item, 0)
+        self.invisibleRootItem().takeChildren()
